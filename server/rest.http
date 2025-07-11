@@ -22,3 +22,14 @@ Content-Type: application/json
 @roomId = {{getRooms.response.body.$.[0].id}}
 
 GET {{baseUrl}}/rooms/{{roomId}}/questions
+
+###
+
+# @name createQuestion
+
+POST {{baseUrl}}/rooms/{{roomId}}/questions
+Content-Type: application/json
+
+{
+    "question": "Why did u do that?"
+}
