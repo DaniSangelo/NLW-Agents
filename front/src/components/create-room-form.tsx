@@ -3,9 +3,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form'
 import { z } from 'zod/v4'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from './input'
-import { Textarea } from './textarea'
-import { Button } from './button'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
+import { Button } from './ui/button'
 
 const createRoomSchema = z.object({
     name: z.string().min(3, { message: 'At least three characters are necessary'}),

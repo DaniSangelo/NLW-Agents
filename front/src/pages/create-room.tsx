@@ -1,5 +1,5 @@
 import { RoomList } from "@/components/room-list";
-import { CreateRoomForm } from "@/components/ui/create-room-form";
+import { CreateRoomForm } from "@/components/create-room-form";
 
 export function CreateRoom() {
     return (
