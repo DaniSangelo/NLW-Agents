@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { Button } from './ui/button'
+import { useCreateRoom } from '@/http/use-create-room'
 
 const createRoomSchema = z.object({
     name: z.string().min(3, { message: 'At least three characters are necessary'}),
@@ -15,6 +16,8 @@ const createRoomSchema = z.object({
 type CreateRoomFormData = z.infer<typeof createRoomSchema>
 
 export function CreateRoomForm() {
+    const { mutateAsync: createRoom } = useCreateRoom()
+
     const createRoomForm = useForm<CreateRoomFormData>({
         resolver: zodResolver(createRoomSchema),
         defaultValues: {
@@ -23,8 +26,13 @@ export function CreateRoomForm() {
         }
     })
 
-    function handleCreateRoom(data: CreateRoomFormData) {
-        console.info(data)
+    async function handleCreateRoom({name, description}: CreateRoomFormData) {
+        await createRoom({
+            name,
+            description
+        })
+
+        createRoomForm.reset()
     }
 
     return (
