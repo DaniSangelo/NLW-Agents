@@ -1,0 +1,75 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Input } from './input'
+import { Textarea } from './textarea'
+import { Button } from './button'
+
+const createRoomSchema = z.object({
+    name: z.string().min(3, { message: 'At least three characters are necessary'}),
+    description: z.string(),
+})
+
+type CreateRoomFormData = z.infer<typeof createRoomSchema>
+
+export function CreateRoomForm() {
+    const createRoomForm = useForm<CreateRoomFormData>({
+        resolver: zodResolver(createRoomSchema),
+        defaultValues: {
+            name: '',
+            description: ''
+        }
+    })
+
+    function handleCreateRoom(data: CreateRoomFormData) {
+        console.info(data)
+    }
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Create room</CardTitle>
+                <CardDescription>Create a new room to start to ask AI </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...createRoomForm}>
+                    <form onSubmit={createRoomForm.handleSubmit(handleCreateRoom)} className='flex flex-col gap-4'>
+                        <FormField 
+                            control={createRoomForm.control}
+                            name='name'
+                            render={({field}) => {
+                                return (
+                                    <FormItem>
+                                        <FormLabel> Room name</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='Enter room name'></Input>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )
+                            }}
+                        />
+                        <FormField 
+                            control={createRoomForm.control}
+                            name='description'
+                            render={({field}) => {
+                                return (
+                                    <FormItem>
+                                        <FormLabel> Description </FormLabel>
+                                        <FormControl>
+                                            <Textarea {...field}></Textarea>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )
+                            }}
+                        />
+                        <Button type="submit" className='w-full'> Create room</Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    )
+}

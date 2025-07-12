@@ -5,3 +5,4 @@ npm i
 shadcn ui
 npm i react-router-dom
 npm i @tanstack/react-query => fazer requisições rest de dentro do react
+npm i @hookform/resolvers
