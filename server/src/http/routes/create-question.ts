@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 import { db } from "../../db/connection.ts";
 import { schema } from "../../db/schema/index.ts";
 import { and, eq, sql } from "drizzle-orm";
-import { generateEmbedding } from "../../services/gemini.ts";
+import { generateAnswer, generateEmbedding } from "../../services/gemini.ts";
 
 const SIMILARITY_LEVEL = 0.7
 
@@ -39,6 +39,12 @@ export const CreateQuestionRoute: FastifyPluginCallbackZod = (app) => {
             .orderBy(sql<number>`1 - (${schema.audioChunks.embeddings} <=> ${embeddingsAsString}::vector)`)
             .limit(3)
 
+        let answer: string | null = null
+        if(chunks.length > 0) {
+            const transcriptions = chunks.map(chunk => chunk.transcription)
+            answer = await generateAnswer(question, transcriptions)
+        }
+
         const room = db.select().from(schema.rooms).where(eq(schema.rooms.id, roomId))
 
         if (!room) {
@@ -49,7 +55,7 @@ export const CreateQuestionRoute: FastifyPluginCallbackZod = (app) => {
 
         const newQuestion = await db
             .insert(schema.questions)
-            .values({roomId, question})
+            .values({roomId, question, answer})
             .returning()
 
         const insertedQuestion = newQuestion[0]
@@ -61,7 +67,8 @@ export const CreateQuestionRoute: FastifyPluginCallbackZod = (app) => {
         }
 
         return reply.status(201).send({
-            question: newQuestion
+            question: newQuestion,
+            answer,
         })
     })
 }

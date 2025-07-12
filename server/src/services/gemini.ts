@@ -47,3 +47,22 @@ export async function generateEmbedding(text: string) {
 
     return response.embeddings[0].values;
 }
+
+export async function generateAnswer(question: string, transcriptions: string[]) {
+    const context = transcriptions.join('\n\n')
+
+    const response = await gemini.models.generateContent({
+        model,
+        contents: [
+            {
+                text: `Answer the question based on the context below. If the answer is not in the context, say "I don't know".\n\nContext: ${context}\n\nQuestion: ${question}`
+            }
+        ]
+    })
+
+    if (!response.text) {
+        throw new Error('Error when generating answer')
+    }
+
+    return response.text
+}
