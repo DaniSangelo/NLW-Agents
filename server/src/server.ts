@@ -10,12 +10,16 @@ import { getRoomsRoute } from './http/routes/get-rooms.ts'
 import { createRoomRoute } from './http/routes/create-room.ts'
 import { getRoomQuestionsRoute } from './http/routes/get-room-questions.ts'
 import { CreateQuestionRoute } from './http/routes/create-question.ts'
+import { UploadAudioRoute } from './http/routes/upload-audio.ts'
+import fastifyMultipart from '@fastify/multipart'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.register(fastifyCors, {
     origin: 'http://localhost:5173'
 })
+
+app.register(fastifyMultipart)
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
@@ -28,6 +32,7 @@ app.register(getRoomsRoute);
 app.register(createRoomRoute);
 app.register(getRoomQuestionsRoute);
 app.register(CreateQuestionRoute)
+app.register(UploadAudioRoute)
 
 app.listen({ port: env.PORT || 3333}).then(() => {
     console.info(`Server is running on port ${env.PORT}`)

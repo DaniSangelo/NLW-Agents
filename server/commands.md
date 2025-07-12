@@ -11,3 +11,4 @@ npx drizzle-kit generate => gera as migrations
 npx drizzle-kit migrate => aplica as migrations no DB
 npx drizzle-kit studio
 npm i drizzle-seed -D
+npm i @fastify/multipart
