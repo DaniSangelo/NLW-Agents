@@ -7,7 +7,7 @@ export function useCreateQuestion(roomId: string) {
 
     return useMutation({
         mutationFn: async(data: CreateQuestionRequest) => {
-            const response = await fetch(`http://localhost:3333/rooms/${roomId}`, {
+            const response = await fetch(`http://localhost:3333/rooms/${roomId}/questions`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -18,6 +18,7 @@ export function useCreateQuestion(roomId: string) {
             const result: CreateQuestionResponse = await response.json()
             return result
         },
+
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['get-questions', roomId]})
         }
